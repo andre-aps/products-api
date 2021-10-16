@@ -1,23 +1,22 @@
 package br.com.project.api.service;
 
+import br.com.project.api.controller.ProductController;
+import br.com.project.api.model.Product;
+import br.com.project.api.repository.ProductRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
-import br.com.project.api.controller.ProductController;
-import br.com.project.api.model.Product;
-import br.com.project.api.repository.ProductRepository;
-
+@AllArgsConstructor
 @Service
 public class ProductService {
 
-	@Autowired
 	private ProductRepository productRepository;
 	
 	public ResponseEntity<List<Product>> findAllProducts() {

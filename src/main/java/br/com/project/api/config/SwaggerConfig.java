@@ -15,18 +15,19 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-	@Bean
+
+    @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-          .select()
-          .apis(RequestHandlerSelectors.basePackage("br.com.project.api.controller"))
-          .paths(PathSelectors.any())
-          .build()
-          .apiInfo(metaInfo());
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("br.com.project.api.controller"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(metaInfo());
     }
-	
-	private ApiInfo metaInfo() {
-		return new ApiInfoBuilder()
+
+    private ApiInfo metaInfo() {
+        return new ApiInfoBuilder()
                 .title("Products API Documentation")
                 .description("This pages documents Products API RESTful endpoints")
                 .version("1.0")
@@ -35,4 +36,5 @@ public class SwaggerConfig {
                 .contact(new Contact("André Pereira da Silva", "https://github.com/andre-aps", "andre.gmaps@gmail.com"))
                 .build();
     }
+
 }

@@ -1,0 +1,17 @@
+spring:
+    datasource:
+        url: ${APP_DATABASE_URL}
+        username: ${APP_DATABASE_USERNAME}
+        password: ${APP_DATABASE_PASSWORD}
+        driverClassName: ${APP_DATABASE_DRIVER}
+    jpa:
+        database-platform: ${APP_DATABASE_PLATFORM}
+        hibernate:
+            ddl-auto: update
+    h2:
+        console:
+            enabled: true
+            path: /h2-console
+            web-allow-others: false
+            settings:
+                trace: false

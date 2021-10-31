@@ -2,7 +2,9 @@ package br.com.project.api.service;
 
 import br.com.project.api.controller.ProductsController;
 import br.com.project.api.dto.ProductDto;
+import br.com.project.api.exception.ProductAlreadyExistException;
 import br.com.project.api.mapper.ProductMapper;
+import br.com.project.api.model.Product;
 import br.com.project.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -49,11 +52,21 @@ public class ProductService {
         return productDto.add(linkTo(methodOn(ProductsController.class).findAll()).withRel("Product list"));
     }
 
-    public ResponseEntity<ProductDto> save(ProductDto productDto) throws URISyntaxException {
+    public ResponseEntity<ProductDto> save(ProductDto productDto) throws URISyntaxException,
+            ProductAlreadyExistException {
+        verifyIfProductAlreadyExist(productDto.getName());
+
         var product = productRepository.save(productMapper.toModel(productDto));
 
         return ResponseEntity.created(new URI("/products"))
                 .body(productMapper.toDto(product));
+    }
+
+    private void verifyIfProductAlreadyExist(String productName) throws ProductAlreadyExistException {
+        Optional<Product> productFound = productRepository.findByName(productName);
+
+        if (productFound.isPresent())
+            throw new ProductAlreadyExistException(productName);
     }
 
     public ResponseEntity remove(Long id) {

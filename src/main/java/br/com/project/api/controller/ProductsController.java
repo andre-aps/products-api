@@ -1,6 +1,7 @@
 package br.com.project.api.controller;
 
 import br.com.project.api.dto.ProductDto;
+import br.com.project.api.exception.ProductAlreadyExistException;
 import br.com.project.api.service.ProductService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,8 @@ public class ProductsController {
 
     @ApiOperation(value = "Save product")
     @PostMapping(produces = "application/json")
-    public ResponseEntity<ProductDto> save(@RequestBody @Valid ProductDto productDto) throws URISyntaxException {
+    public ResponseEntity<ProductDto> save(@RequestBody @Valid ProductDto productDto) throws URISyntaxException,
+            ProductAlreadyExistException {
         return productService.save(productDto);
     }
 

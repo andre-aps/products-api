@@ -4,7 +4,6 @@ import br.com.project.api.controller.ProductsController;
 import br.com.project.api.dto.ProductDto;
 import br.com.project.api.exception.ProductAlreadyExistException;
 import br.com.project.api.mapper.ProductMapper;
-import br.com.project.api.model.Product;
 import br.com.project.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -27,28 +24,33 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper = ProductMapper.INSTANCE;
 
-    public ResponseEntity<List<ProductDto>> findAll() {
+    public ResponseEntity findAll() {
         var products = productRepository.findAll();
 
-        return products.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(products
-                .stream()
-                .map(productMapper::toDto)
-                .map(ProductService::addSelfLinkRelation)
-                .collect(Collectors.toList()));
+        if(!products.isEmpty())
+            return ResponseEntity.ok(products
+                    .stream()
+                    .map(productMapper::toDto)
+                    .map(this::addSelfLinkRelation)
+                    .collect(Collectors.toList()));
+
+        return ResponseEntity.notFound().build();
     }
 
-    private static ProductDto addSelfLinkRelation(ProductDto productDto) {
+    private ProductDto addSelfLinkRelation(ProductDto productDto) {
         return productDto.add(linkTo(methodOn(ProductsController.class).findById(productDto.getId())).withSelfRel());
     }
 
-    public ResponseEntity<ProductDto> findById(Long id) {
+    public ResponseEntity findById(Long id) {
         var productFound = productRepository.findById(id);
 
-        return productFound.isEmpty() ? ResponseEntity.notFound().build() :
-                ResponseEntity.ok(addLinkRelation(productMapper.toDto(productFound.get())));
+        if(productFound.isPresent())
+            return ResponseEntity.ok(addLinkRelation(productMapper.toDto(productFound.get())));
+
+        return ResponseEntity.notFound().build();
     }
 
-    private static ProductDto addLinkRelation(ProductDto productDto) {
+    private ProductDto addLinkRelation(ProductDto productDto) {
         return productDto.add(linkTo(methodOn(ProductsController.class).findAll()).withRel("Product list"));
     }
 
@@ -62,11 +64,11 @@ public class ProductService {
                 .body(productMapper.toDto(product));
     }
 
-    private void verifyIfProductAlreadyExist(String productName) throws ProductAlreadyExistException {
-        Optional<Product> productFound = productRepository.findByName(productName);
+    private void verifyIfProductAlreadyExist(String name) throws ProductAlreadyExistException {
+        var productFound = productRepository.findByName(name);
 
         if (productFound.isPresent())
-            throw new ProductAlreadyExistException(productName);
+            throw new ProductAlreadyExistException(name);
     }
 
     public ResponseEntity remove(Long id) {
@@ -80,7 +82,7 @@ public class ProductService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<ProductDto> update(Long id, @Valid ProductDto productDto) {
+    public ResponseEntity update(Long id, @Valid ProductDto productDto) {
         var productFound = productRepository.findById(id);
 
         if (productFound.isPresent()) {

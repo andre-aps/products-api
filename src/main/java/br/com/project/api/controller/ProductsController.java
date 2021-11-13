@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URISyntaxException;
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -21,19 +20,19 @@ public class ProductsController {
 
     @ApiOperation(value = "Returns product list")
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<ProductDto>> findAll() {
+    public ResponseEntity findAll() {
         return productService.findAll();
     }
 
     @ApiOperation(value = "Returns an existing product")
     @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<ProductDto> findById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity findById(@PathVariable(value = "id") Long id) {
         return productService.findById(id);
     }
 
     @ApiOperation(value = "Save product")
     @PostMapping(produces = "application/json")
-    public ResponseEntity<ProductDto> save(@RequestBody @Valid ProductDto productDto) throws URISyntaxException,
+    public ResponseEntity save(@RequestBody @Valid ProductDto productDto) throws URISyntaxException,
             ProductAlreadyExistException {
         return productService.save(productDto);
     }
@@ -46,7 +45,7 @@ public class ProductsController {
 
     @ApiOperation(value = "Update an existing product")
     @PutMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<ProductDto> update(@PathVariable(value = "id") Long id, @RequestBody @Valid ProductDto productDto) {
+    public ResponseEntity update(@PathVariable(value = "id") Long id, @RequestBody @Valid ProductDto productDto) {
         return productService.update(id, productDto);
     }
 

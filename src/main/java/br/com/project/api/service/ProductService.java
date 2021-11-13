@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.stream.Collectors;
@@ -82,7 +81,7 @@ public class ProductService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity update(Long id, @Valid ProductDto productDto) {
+    public ResponseEntity update(Long id, ProductDto productDto) {
         var productFound = productRepository.findById(id);
 
         if (productFound.isPresent()) {

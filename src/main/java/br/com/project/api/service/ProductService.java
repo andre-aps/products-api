@@ -26,14 +26,14 @@ public class ProductService {
     public ResponseEntity findAll() {
         var products = productRepository.findAll();
 
-        if(!products.isEmpty())
-            return ResponseEntity.ok(products
-                    .stream()
-                    .map(productMapper::toDto)
-                    .map(this::addSelfLinkRelation)
-                    .collect(Collectors.toList()));
+        if (products.isEmpty())
+            return ResponseEntity.notFound().build();
 
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(products
+                .stream()
+                .map(productMapper::toDto)
+                .map(this::addSelfLinkRelation)
+                .collect(Collectors.toList()));
     }
 
     private ProductDto addSelfLinkRelation(ProductDto productDto) {
@@ -43,7 +43,7 @@ public class ProductService {
     public ResponseEntity findById(Long id) {
         var productFound = productRepository.findById(id);
 
-        if(productFound.isPresent())
+        if (productFound.isPresent())
             return ResponseEntity.ok(addLinkRelation(productMapper.toDto(productFound.get())));
 
         return ResponseEntity.notFound().build();

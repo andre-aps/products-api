@@ -1,5 +1,6 @@
 package br.com.project.api.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductDto extends RepresentationModel<ProductDto> {
 
+    @ApiModelProperty(hidden = true)
     private Long id;
     @NotNull
     private String name;

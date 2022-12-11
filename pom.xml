@@ -14,7 +14,6 @@
     <groupId>br.com.project</groupId>
     <artifactId>products-api</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
     <name>products-api</name>
     <description>Demo project for Spring Boot</description>
 
@@ -77,6 +76,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
 

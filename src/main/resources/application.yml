@@ -1,11 +1,14 @@
+server:
+    port : 8080
+
 spring:
     datasource:
-        url: ${APP_DATABASE_URL}
-        username: ${APP_DATABASE_USERNAME}
-        password: ${APP_DATABASE_PASSWORD}
-        driverClassName: ${APP_DATABASE_DRIVER}
+        url: jdbc:h2:mem:testdb
+        username: sa
+        password:
+        driverClassName: org.h2.Driver
     jpa:
-        database-platform: ${APP_DATABASE_PLATFORM}
+        database-platform: org.hibernate.dialect.H2Dialect
         hibernate:
             ddl-auto: update
     h2:

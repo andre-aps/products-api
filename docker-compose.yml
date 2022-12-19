@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+    products-api:
+        container_name: api
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 8080:8080
+        networks:
+            - products-network
+
+networks:
+    products-network:
+        driver: bridge

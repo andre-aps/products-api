@@ -3,14 +3,6 @@ version: '3'
 services:
     products-api:
         container_name: api
-        build:
-            context: .
-            dockerfile: Dockerfile
+        image: andreaps/products-api:1.0.0
         ports:
-            - 8080:8080
-        networks:
-            - products-network
-
-networks:
-    products-network:
-        driver: bridge
+            - "8080:8080"

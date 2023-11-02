@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -21,7 +22,7 @@ public class ProductsController {
 
     @ApiOperation(value = "Returns product list")
     @GetMapping
-    public ResponseEntity<ProductDto> findAll() {
+    public ResponseEntity<List<ProductDto>> findAll() {
         return productService.findAll();
     }
 
@@ -40,7 +41,7 @@ public class ProductsController {
 
     @ApiOperation(value = "Remove an existing product")
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity remove(@PathVariable(value = PRODUCT_ID) Long id) {
+    public ResponseEntity<Void> remove(@PathVariable(value = PRODUCT_ID) Long id) {
         return productService.remove(id);
     }
 

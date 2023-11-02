@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -23,11 +24,12 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper = ProductMapper.INSTANCE;
 
-    public ResponseEntity findAll() {
+    public ResponseEntity<List<ProductDto>> findAll() {
         var products = productRepository.findAll();
 
-        if (products.isEmpty())
+        if (products.isEmpty()) {
             return ResponseEntity.notFound().build();
+        }
 
         return ResponseEntity.ok(products
                 .stream()
@@ -40,37 +42,35 @@ public class ProductService {
         return productDto.add(linkTo(methodOn(ProductsController.class).findById(productDto.getId())).withSelfRel());
     }
 
-    public ResponseEntity findById(Long id) {
+    public ResponseEntity<ProductDto> findById(Long id) {
         var productFound = productRepository.findById(id);
 
-        if (productFound.isPresent())
-            return ResponseEntity.ok(addLinkRelation(productMapper.toDto(productFound.get())));
+        return productFound.map(product -> ResponseEntity.ok(addLinkRelation(productMapper.toDto(product))))
+                .orElseGet(() -> ResponseEntity.notFound().build());
 
-        return ResponseEntity.notFound().build();
     }
 
     private ProductDto addLinkRelation(ProductDto productDto) {
         return productDto.add(linkTo(methodOn(ProductsController.class).findAll()).withRel("Product list"));
     }
 
-    public ResponseEntity<ProductDto> save(ProductDto productDto) throws URISyntaxException,
-            ProductAlreadyExistException {
+    public ResponseEntity<ProductDto> save(ProductDto productDto) throws URISyntaxException, ProductAlreadyExistException {
         verifyIfProductAlreadyExist(productDto.getName());
 
         var product = productRepository.save(productMapper.toModel(productDto));
 
-        return ResponseEntity.created(new URI("/products"))
-                .body(productMapper.toDto(product));
+        return ResponseEntity.created(new URI("/products")).body(productMapper.toDto(product));
     }
 
     private void verifyIfProductAlreadyExist(String name) throws ProductAlreadyExistException {
         var productFound = productRepository.findByName(name);
 
-        if (productFound.isPresent())
+        if (productFound.isPresent()) {
             throw new ProductAlreadyExistException(name);
+        }
     }
 
-    public ResponseEntity remove(Long id) {
+    public ResponseEntity<Void> remove(Long id) {
         var productFound = productRepository.findById(id);
 
         if (productFound.isPresent()) {
@@ -81,7 +81,7 @@ public class ProductService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity update(Long id, ProductDto productDto) {
+    public ResponseEntity<ProductDto> update(Long id, ProductDto productDto) {
         var productFound = productRepository.findById(id);
 
         if (productFound.isPresent()) {

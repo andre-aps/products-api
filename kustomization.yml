@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
 - k8s/deployment.yml
 
-namespace: products
+namespace: products-api
 
 images:
 - name: andreaps/products-api

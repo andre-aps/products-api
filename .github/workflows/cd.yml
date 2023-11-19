@@ -1,0 +1,46 @@
+name: CD
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: build image and push to docker hub
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: andreaps
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: andreaps/products-api
+          tags: ${{ github.sha }}, latest
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: kustomize
+        uses: imranismail/setup-kustomize@v1
+        with:
+          kustomize_version: '3.8.7'
+
+      - name: update k8s
+        run: |
+          kustomize edit set image andreaps/products-api=andreaps/products-api:${{ github.sha }}
+
+      - name: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Deploy Action"
+          git commit -am "change image tag"
+
+      - name: push
+        uses: ad-m/github-push-action@master
+        with:
+          branch: main

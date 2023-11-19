@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: productsapp
+  name: products-api
   labels:
-    app: productsapp
+    app: products-api
 spec:
   selector:
     matchLabels:
-      app: productsapp
+      app: products-api
   replicas: 5
   template:
     metadata:
       labels:
-        app: productsapp
+        app: products-api
     spec:
       containers:
-      - name: productsapp
+      - name: products-api
         image: andreaps/products-api
         ports:
         - containerPort: 8080
@@ -23,10 +23,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: productsapp
+  name: products-api
 spec:
   selector:
-    app: productsapp
+    app: products-api
   type: ClusterIP
   ports:
     - port: 8080

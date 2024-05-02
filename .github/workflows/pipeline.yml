@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 jobs:
   test:
-    name: Test
+    name: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,7 +28,7 @@ jobs:
       - name: Build and test with Maven
         run: mvn clean test
   build:
-    name: Build
+    name: build
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +43,7 @@ jobs:
           repository: andreaps/products-api
           tags: ${{ github.sha }}, latest
   deploy:
-    name: Deploy
+    name: deploy
     needs: build
     runs-on: ubuntu-latest
     steps:

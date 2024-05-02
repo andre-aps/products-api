@@ -8,4 +8,4 @@ namespace: products-api
 images:
 - name: andreaps/products-api
   newName: andreaps/products-api
-  newTag: 3a2005c978a186be9d922fdee10599ac60d285bf
+  newTag: 731e7063b6923aef211de67a8b6f641e67e9e67f

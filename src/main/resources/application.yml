@@ -8,9 +8,11 @@ spring:
         password:
         driverClassName: org.h2.Driver
     jpa:
-        database-platform: org.hibernate.dialect.H2Dialect
         hibernate:
             ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.H2Dialect
     h2:
         console:
             enabled: true
@@ -18,3 +20,7 @@ spring:
             web-allow-others: false
             settings:
                 trace: false
+
+springdoc:
+    api-docs:
+        path: /api-docs
